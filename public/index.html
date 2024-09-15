@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  
   <!-- Open Graph Metadata -->
   <meta property="og:title" content="Spaceboy DJ sets" />
   <meta property="og:description" content="Finest electronic music selections by Spaceboy." />
@@ -39,15 +38,8 @@
       height: auto;
       position: absolute;
       z-index: 1;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .rotate {
-      animation: rotate 4s linear infinite;
+      transform-origin: center;
+      transition: transform 0.1s linear; /* Smooth transition for rotation */
     }
 
     .audio-player {
@@ -80,19 +72,48 @@
 
   <script>
     const audio = document.getElementById('mixtape-audio');
-    const vinile = document.querySelector('.vinile');
+    const logo = document.querySelector('.logo');
     const mixtapeSelect = document.getElementById('mixtape-select');
 
+    let rotationDegree = 0;
+    let rotating = false;
+
+    function updateRotation() {
+      const computedStyle = window.getComputedStyle(logo);
+      const transform = computedStyle.transform;
+      if (transform && transform !== 'none') {
+        const matrix = new WebKitCSSMatrix(transform);
+        rotationDegree = Math.round(Math.atan2(matrix.m21, matrix.m11) * (180 / Math.PI));
+      }
+    }
+
+    function rotateLogo() {
+      if (rotating) {
+        rotationDegree += 1; // Adjust rotation speed here
+        logo.style.transform = `rotate(${rotationDegree}deg)`;
+        requestAnimationFrame(rotateLogo);
+      }
+    }
+
     audio.addEventListener('play', () => {
-      vinile.classList.add('rotate');
+      if (!rotating) {
+        rotating = true;
+        rotateLogo();
+      }
     });
 
     audio.addEventListener('pause', () => {
-      vinile.classList.remove('rotate');
+      if (rotating) {
+        updateRotation();
+        rotating = false;
+      }
     });
 
     audio.addEventListener('ended', () => {
-      vinile.classList.remove('rotate');
+      if (rotating) {
+        updateRotation();
+        rotating = false;
+      }
     });
 
     function loadMixtapes() {
