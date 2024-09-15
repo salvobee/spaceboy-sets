@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spaceboy DJ Sets</title>
+  <style>
+
+    .vinile {
+      width: 80vw; 
+      height: 80vw; 
+      max-width: 750px; 
+      max-height: 750px;
+      border-radius: 50%;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 50px auto;
+      position: relative;
+    }
+
+    .logo {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .rotate {
+      animation: rotate 4s linear infinite;
+    }
+
+    .audio-player {
+      text-align: center;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vinile">
+    <img src="logo.svg" alt="Logo" class="logo">
+  </div>
+
+  <div class="audio-player">
+    <audio id="mixtape-audio" controls>
+      <source src="https://d3lrnnt7lnzh9p.cloudfront.net/20240915.mp3" type="audio/mpeg">
+      Your browser does not support audio tag.
+    </audio>
+  </div>
+
+  <script>
+    const audio = document.getElementById('mixtape-audio');
+    const vinile = document.querySelector('.vinile');
+
+    audio.addEventListener('play', () => {
+      vinile.classList.add('rotate');
+    });
+
+    audio.addEventListener('pause', () => {
+      vinile.classList.remove('rotate');
+    });
+
+    audio.addEventListener('ended', () => {
+      vinile.classList.remove('rotate');
+    });
+  </script>
+
+</body>
+</html>
